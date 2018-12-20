@@ -1,0 +1,45 @@
+{
+    "name": "node-sonos-voice-streaming",
+    "description": "A node module for stream live voice audio from a client to the server into a mp3 live stream that is sent to SONOS speakers.",
+    "homepage": "https://github.com/svenmuennich/node-sonos-voice-streaming#readme",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/svenmuennich/node-sonos-voice-streaming/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/svenmuennich/node-sonos-voice-streaming.git"
+    },
+    "version": "0.0.1",
+    "main": "src/index.js",
+    "scripts": {
+        "eslint": "eslint .",
+        "eslint:fix": "eslint --fix .",
+        "start:server": "node src/server/index.js",
+        "start:server:dev": "nodemon --exec 'npm run start:server'"
+    },
+    "dependencies": {
+        "axios": "^0.18.0",
+        "koa-mount": "^4.0.0",
+        "koa-router": "^7.4.0",
+        "koa-socket-2": "^1.0.17",
+        "koa-static": "^5.0.0",
+        "sha1": "^1.1.1",
+        "socket.io-client": "^2.2.0",
+        "stream-buffers": "^3.0.2",
+        "stream-chunker": "^1.2.8",
+        "uuid": "^3.3.2"
+    },
+    "devDependencies": {
+        "nodemon": "^1.18.7",
+        "viison-style-guide": "git+https://github.com/VIISON/style-guide.git"
+    },
+    "engines": {
+        "node": "^10.13.0"
+    },
+    "nodemonConfig": {
+        "ignore": [
+            "src/client/*"
+        ]
+    }
+}
