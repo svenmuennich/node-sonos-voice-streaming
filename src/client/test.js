@@ -7,6 +7,7 @@ const recordDuration = 500000;
 const client = new VoiceStreamingClient(serverUrl);
 client.on(eventNames.audioLiveStream.ready, () => {
     console.log('READY EVENT');
+    client.record();
 });
 client.startStream();
 

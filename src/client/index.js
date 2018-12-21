@@ -7,11 +7,10 @@ const { spawn } = require('child_process');
 const eventNames = require('../eventNames');
 
 module.exports = class VoiceStreamingClient extends EventEmitter {
-    constructor(serverUrl, recordingOptions = [], recordingFormat = 'mp3', chunkSize = 128) {
+    constructor(serverUrl, recordingFormat = 'mp3', chunkSize = 128) {
         super();
 
         this.serverUrl = serverUrl;
-        this.recordingOptions = recordingOptions;
         this.recordingFormat = recordingFormat;
         this.chunkSize = chunkSize;
         this.streamId = `${UUID()}.${recordingFormat}`;
@@ -22,7 +21,6 @@ module.exports = class VoiceStreamingClient extends EventEmitter {
         this.socket.on(eventNames.audioLiveStream.ready, () => {
             console.log(`Stream ${this.streamId} is ready for recording.`);
             this.emit(eventNames.audioLiveStream.ready);
-            this.record();
         });
 
         console.log(`Setting up stream ${this.streamId}...`);
@@ -31,7 +29,7 @@ module.exports = class VoiceStreamingClient extends EventEmitter {
         });
     }
 
-    record() {
+    record(recordingOptions = []) {
         console.log(`Recording stream ${this.streamId}...`);
         const chunker = streamChunker(
             this.chunkSize,
@@ -61,7 +59,7 @@ module.exports = class VoiceStreamingClient extends EventEmitter {
             '-r', '44100', // 44100Hz sample rate
             '-b', '16', // little endian 16 bit
             '-', // write audio to stdout
-            ...this.recordingOptions,
+            ...recordingOptions,
         ]);
         this.recordProcess.stdout.pipe(chunker);
     }
