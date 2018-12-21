@@ -35,6 +35,7 @@ module.exports = async (options) => {
 
     // TODO: Dynamically regroup all speakers in the configured household. Load speakers here.
     const groupId = 'RINCON_7828CA0F18DA01400:4281004221';
+    const playerId = 'RINCON_7828CA0F18DA01400';
 
     // Initialize the web socket
     socketIo.on('connection', (connection) => {
@@ -74,7 +75,7 @@ module.exports = async (options) => {
                 // Play an announcement chime clip AFTER starting the audio stream to work around the delay caused by
                 // the SONOS speaker (ca. 7 seconds)
                 const announcementChimeUrl = new URL(`${staticFilesBasePath}/announcement_chime.mp3`, baseUrl);
-                sonosControl.playAudioClipOnAllSpeakers(announcementChimeUrl.toString());
+                sonosControl.playAudioClipOnPlayer(announcementChimeUrl.toString(), playerId);
             }
         });
 

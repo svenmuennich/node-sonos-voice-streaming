@@ -69,16 +69,27 @@ module.exports = class SonosControl {
         return undefined;
     }
 
-    async playAudioClipOnAllSpeakers(mediaUrl) {
+    async playAudioClipOnAllPlayers(mediaUrl) {
         const players = await this.getPlayers();
-        await Promise.all(players.map((player) => {
-            console.info(`Playing audio clip on player "${player.name}" (${player.id})`);
-
-            return this.client.post(`players/${player.id}/audioClip`, {
-                name: 'pickware automation',
-                appId,
-                streamUrl: mediaUrl,
-            });
+        await Promise.all(players.map(async (player) => {
+            await this.playAudioClipOnPlayer(mediaUrl, player.id);
         }));
+    }
+
+    async playAudioClipOnPlayer(mediaUrl, playerId) {
+        const players = await this.getPlayers();
+        const player = players.find(anyPlayer => anyPlayer.id === playerId);
+        if (!player) {
+            console.info(`Player with ID ${player.id} not found`);
+
+            return;
+        }
+
+        console.info(`Playing audio clip on player "${player.name}" (${player.id})`);
+        await this.client.post(`players/${player.id}/audioClip`, {
+            appId,
+            name: 'pickware-automation-audio-clip',
+            streamUrl: mediaUrl,
+        });
     }
 };
