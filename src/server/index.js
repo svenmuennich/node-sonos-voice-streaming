@@ -48,8 +48,6 @@ module.exports = async (options) => {
             audioStreamService.createStream(payload.streamId);
             streamSessions[payload.streamId] = sononsSessionId;
             socket.emit(eventNames.audioLiveStream.ready, {});
-
-            // TODO: Kill stream if no event has been received for 2 seconds
         });
 
         socket.on(eventNames.audioLiveStream.chunk, async (payload) => {
