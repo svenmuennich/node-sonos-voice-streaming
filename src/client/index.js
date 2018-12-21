@@ -46,9 +46,9 @@ module.exports = class VoiceStreamingClient extends EventEmitter {
         });
         chunker.on('end', () => {
             console.log(`Tearing down stream ${this.streamId}...`);
-            this.socket.emit(eventNames.audioLiveStream.tearDown, {
-                streamId: this.streamId,
-            });
+            // this.socket.emit(eventNames.audioLiveStream.tearDown, {
+            //     streamId: this.streamId,
+            // });
             this.socket.disconnect(0);
         });
 
