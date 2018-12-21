@@ -12,7 +12,7 @@ const routes = require('./routes');
 const streamSessions = {};
 
 module.exports = async (options) => {
-    const { app, baseUrl, sonosControl } = options;
+    const { app, baseUrl, sonosControl, sonosGroupId } = options;
     const pathPrefix = options.pathPrefix || '/';
 
     // Serve static files like announcement chime
@@ -34,7 +34,6 @@ module.exports = async (options) => {
     console.log(players);
 
     // TODO: Dynamically regroup all speakers in the configured household. Load speakers here.
-    const groupId = 'RINCON_7828CA0F18DA01400:4281004221';
     const playerId = 'RINCON_7828CA0F18DA01400';
 
     // Initialize the web socket
@@ -44,7 +43,7 @@ module.exports = async (options) => {
 
         socket.on(eventNames.audioLiveStream.setUp, async (payload) => {
             console.log(`Setting up live audio stream ${payload.streamId}...`);
-            const sononsSessionId = await sonosControl.ensurePlaybackSession(groupId, sha1(payload.streamId));
+            const sononsSessionId = await sonosControl.ensurePlaybackSession(sonosGroupId, sha1(payload.streamId));
             audioStreamService.createStream(payload.streamId);
             streamSessions[payload.streamId] = sononsSessionId;
             socket.emit(eventNames.audioLiveStream.ready, {});
