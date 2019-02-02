@@ -49,7 +49,6 @@ module.exports = class VoiceStreamingClient extends EventEmitter {
             // this.socket.emit(eventNames.audioLiveStream.tearDown, {
             //     streamId: this.streamId,
             // });
-            this.socket.disconnect(0);
         });
 
         const recordProcess = spawn('rec', [ // see http://sox.sourceforge.net
