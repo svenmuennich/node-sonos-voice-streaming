@@ -17,7 +17,7 @@ module.exports = class VoiceStreamingClient extends EventEmitter {
     }
 
     startStream() {
-        this.streamId = `${UUID()}.${recordingFormat}`;
+        this.streamId = `${UUID()}.${this.recordingFormat}`;
         this.socket.once(eventNames.audioLiveStream.ready, () => {
             console.log(`Stream ${this.streamId} is ready for recording.`);
             this.emit(eventNames.audioLiveStream.ready);
