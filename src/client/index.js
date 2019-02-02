@@ -13,12 +13,12 @@ module.exports = class VoiceStreamingClient extends EventEmitter {
         this.serverUrl = serverUrl;
         this.recordingFormat = recordingFormat;
         this.chunkSize = chunkSize;
-        this.streamId = `${UUID()}.${recordingFormat}`;
+        this.socket = socketIoClient(this.serverUrl);
     }
 
     startStream() {
-        this.socket = socketIoClient(this.serverUrl);
-        this.socket.on(eventNames.audioLiveStream.ready, () => {
+        this.streamId = `${UUID()}.${recordingFormat}`;
+        this.socket.once(eventNames.audioLiveStream.ready, () => {
             console.log(`Stream ${this.streamId} is ready for recording.`);
             this.emit(eventNames.audioLiveStream.ready);
         });
@@ -52,7 +52,7 @@ module.exports = class VoiceStreamingClient extends EventEmitter {
             this.socket.disconnect(0);
         });
 
-        this.recordProcess = spawn('rec', [ // see http://sox.sourceforge.net
+        const recordProcess = spawn('rec', [ // see http://sox.sourceforge.net
             '-q', // don't show stats
             '-t', this.recordingFormat,
             '-c', '1', // mono
@@ -61,6 +61,8 @@ module.exports = class VoiceStreamingClient extends EventEmitter {
             '-', // write audio to stdout
             ...recordingOptions,
         ]);
-        this.recordProcess.stdout.pipe(chunker);
+        recordProcess.stdout.pipe(chunker);
+
+        return recordProcess
     }
 };
