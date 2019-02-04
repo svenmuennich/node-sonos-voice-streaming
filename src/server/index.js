@@ -87,8 +87,7 @@ module.exports = async (options) => {
                 // Play an announcement chime clip AFTER starting the audio stream to work around the delay caused by
                 // the SONOS speaker (ca. 7 seconds)
                 const announcementChimeUrl = new URL(`${staticFilesBasePath}/announcement_chime.mp3`, baseUrl);
-
-                setTimeout(() => sonosControl.playAudioClipOnAllPlayers(announcementChimeUrl.toString()), 1500)
+                sonosControl.playAudioClipOnAllPlayers(announcementChimeUrl.toString());
             }
         });
 
