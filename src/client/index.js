@@ -62,6 +62,6 @@ module.exports = class VoiceStreamingClient extends EventEmitter {
         ]);
         recordProcess.stdout.pipe(chunker);
 
-        return recordProcess
+        return recordProcess;
     }
 };

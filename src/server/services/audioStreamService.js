@@ -28,7 +28,7 @@ class AudioStream {
                 console.log(
                     `Closing audio stream ${this.streamId}, because no data chunk has been received for 3 seconds...`
                 );
-                audioStreamService.endStream(this.streamId);
+                this.suicideCallback();
             },
             7000 // 7 seconds
         );
@@ -62,20 +62,20 @@ class AudioStreamService {
         });
 
         this.streams[streamId] = stream;
-        this.tearDownAudioSessionCallback = tearDownCallback
+        this.tearDownAudioSessionCallback = tearDownCallback;
 
         return stream;
     }
 
     endStream(streamId) {
-        console.log(`Stream should be deleted ${streamId} and therfore can no longer be served`)
+        console.log(`Stream should be deleted ${streamId} and therfore can no longer be served`);
         if (this.streams[streamId]) {
             this.streams[streamId].endStreamBuffers();
             delete this.streams[streamId];
         }
 
         if (Object.keys(this.streams).length === 0 && this.tearDownAudioSessionCallback) {
-            this.tearDownAudioSessionCallback()
+            this.tearDownAudioSessionCallback();
         }
     }
 }

@@ -30,7 +30,7 @@ module.exports = async (options) => {
     const socketIo = new KoaSocketIO();
     socketIo.attach(app);
 
-    let allPlayersGroupId = undefined
+    let allPlayersGroupId;
     async function tearDownStream(streamId) {
         const sonosSessionId = streamSessions[streamId];
 
@@ -38,7 +38,7 @@ module.exports = async (options) => {
         await sonosControl.suspendPlaybackSession(sonosSessionId);
 
         // Disband the group of all devices
-        await sonosControl.setGroupMembers(allPlayersGroupId, [])
+        await sonosControl.setGroupMembers(allPlayersGroupId, []);
     }
 
     // Initialize the web socket
@@ -49,12 +49,12 @@ module.exports = async (options) => {
         socket.on(eventNames.audioLiveStream.setUp, async (payload) => {
             // Update player context
             const groupData = await sonosControl.getCachedGroupData();
-            if (!groupData || !groupData.players) {
+            if (!groupData || !groupData.players) {
                 throw new Error('No player info avaiable');
             }
 
-            const playerIds = groupData.players.map(player => player.id)
-            allPlayersGroupId = await sonosControl.createOrFetchGroup(playerIds)
+            const playerIds = groupData.players.map(player => player.id);
+            allPlayersGroupId = await sonosControl.createOrFetchGroup(playerIds);
 
             console.log(`Setting up live audio stream ${payload.streamId}...`);
             const sonosSessionId = await sonosControl.ensurePlaybackSession(allPlayersGroupId, sha1(payload.streamId));
