@@ -1,9 +1,9 @@
 const client = require('./client');
 const server = require('./server');
-const eventNames = require('./eventNames');
+const eventTopics = require('./eventTopics');
 
 module.exports = {
     client,
-    eventNames,
+    eventTopics,
     server,
 };

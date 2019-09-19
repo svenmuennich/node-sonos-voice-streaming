@@ -2,6 +2,7 @@ const { ReadableStreamBuffer } = require('stream-buffers');
 
 const streamBufferFrequency = 5; // in milliseconds
 const streamBufferChunkSize = 128; // in bytes
+const suicideTimeout = 7000; // 7 seconds
 
 class AudioStream {
     constructor(streamId, suicideCallback) {
@@ -25,12 +26,11 @@ class AudioStream {
         }
         this.suicideTimeout = setTimeout(
             () => {
-                console.log(
-                    `Closing audio stream ${this.streamId}, because no data chunk has been received for 3 seconds...`
-                );
+                console.log(`Closing audio stream ${this.streamId}, because no data chunk has been received for `
+                    + `${suicideTimeout}ms...`);
                 this.suicideCallback();
             },
-            7000 // 7 seconds
+            suicideTimeout,
         );
     }
 
@@ -68,7 +68,7 @@ class AudioStreamService {
     }
 
     endStream(streamId) {
-        console.log(`Stream should be deleted ${streamId} and therfore can no longer be served`);
+        console.log(`Ending stream ${streamId}...`);
         if (this.streams[streamId]) {
             this.streams[streamId].endStreamBuffers();
             delete this.streams[streamId];
@@ -80,6 +80,4 @@ class AudioStreamService {
     }
 }
 
-const audioStreamService = new AudioStreamService();
-
-module.exports = audioStreamService;
+module.exports = new AudioStreamService();

@@ -4,7 +4,7 @@ const UUID = require('uuid/v4');
 const EventEmitter = require('events');
 const { spawn } = require('child_process');
 
-const eventNames = require('../eventNames');
+const eventTopics = require('../eventTopics');
 
 module.exports = class VoiceStreamingClient extends EventEmitter {
     constructor(serverUrl, recordingFormat = 'mp3', chunkSize = 128) {
@@ -18,13 +18,13 @@ module.exports = class VoiceStreamingClient extends EventEmitter {
 
     startStream() {
         this.streamId = `${UUID()}.${this.recordingFormat}`;
-        this.socket.once(eventNames.audioLiveStream.ready, () => {
+        this.socket.once(eventTopics.audioLiveStream.ready, () => {
             console.log(`Stream ${this.streamId} is ready for recording.`);
-            this.emit(eventNames.audioLiveStream.ready);
+            this.emit(eventTopics.audioLiveStream.ready);
         });
 
         console.log(`Setting up stream ${this.streamId}...`);
-        this.socket.emit(eventNames.audioLiveStream.setUp, {
+        this.socket.emit(eventTopics.audioLiveStream.setUp, {
             streamId: this.streamId,
         });
     }
@@ -36,19 +36,19 @@ module.exports = class VoiceStreamingClient extends EventEmitter {
             {
                 flush: true,
                 align: false,
-            }
+            },
         );
         chunker.on('data', (data) => {
-            this.socket.emit(eventNames.audioLiveStream.chunk, {
+            this.socket.emit(eventTopics.audioLiveStream.chunk, {
                 streamId: this.streamId,
                 data: data.toString('base64'),
             });
         });
         chunker.on('end', () => {
             console.log(`Tearing down stream ${this.streamId}...`);
-            // this.socket.emit(eventNames.audioLiveStream.tearDown, {
-            //     streamId: this.streamId,
-            // });
+            this.socket.emit(eventTopics.audioLiveStream.tearDown, {
+                streamId: this.streamId,
+            });
         });
 
         const recordProcess = spawn('rec', [ // see http://sox.sourceforge.net

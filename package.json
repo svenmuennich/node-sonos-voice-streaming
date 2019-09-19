@@ -15,15 +15,16 @@
     "scripts": {
         "eslint": "eslint .",
         "eslint:fix": "eslint --fix .",
-        "start:server": "node src/server/index.js",
+        "start:client": "node src/test/client.js",
+        "start:server": "node src/test/server.js",
         "start:server:dev": "nodemon --exec 'npm run start:server'"
     },
     "dependencies": {
+        "@koa/router": "^8.0.1",
         "axios": "^0.18.0",
+        "koa": "^2.8.1",
         "koa-mount": "^4.0.0",
-        "koa-router": "^7.4.0",
-        "koa-socket-2": "^1.0.17",
-        "koa-static": "^5.0.0",
+        "koa-socket-2": "^1.2.0",
         "sha1": "^1.1.1",
         "socket.io-client": "^2.2.0",
         "stream-buffers": "^3.0.2",
@@ -31,6 +32,7 @@
         "uuid": "^3.3.2"
     },
     "devDependencies": {
+        "node-sonos-rest-api-client": "git+ssh://git@github.com/VIISON/node-sonos-rest-api-client.git",
         "nodemon": "^1.18.7",
         "viison-style-guide": "git+https://github.com/VIISON/style-guide.git"
     },
